@@ -2,11 +2,14 @@ const mapping = {
   '%E8%BD%A6%E7%A5%A8%E7%A5%A8': ['vip', 'watch_vip'],
   'Locket': ['Gold', 'com.ngdanhthanhtrung.premium.yearly']
 };
+
 const ua = $request.headers["User-Agent"] || $request.headers["user-agent"];
 let obj = JSON.parse($response.body);
+
 obj.subscriber = obj.subscriber || {};
 obj.subscriber.entitlements = obj.subscriber.entitlements || {};
 obj.subscriber.subscriptions = obj.subscriber.subscriptions || {};
+
 const premiumInfo = {
   is_sandbox: false,
   ownership_type: "PURCHASED",
@@ -17,13 +20,16 @@ const premiumInfo = {
   purchase_date: "2025-11-11T01:04:17Z",
   store: "app_store"
 };
+
 const entitlementInfo = {
   grace_period_expires_date: null,
   purchase_date: "2025-11-11T01:04:17Z",
   product_identifier: "com.ngdanhthanhtrung.premium.yearly",
   expires_date: "2999-12-18T01:04:17Z"
 };
+
 const match = Object.keys(mapping).find(e => ua.includes(e));
+
 if (match) {
   let [entKey, subKey] = mapping[match];
   let finalSubKey = subKey || "com.ngdanhthanhtrung.premium.yearly";
@@ -35,5 +41,7 @@ if (match) {
   obj.subscriber.entitlements["Gold"] = entitlementInfo;
   obj.subscriber.entitlements["pro"] = entitlementInfo;
 }
+
 obj.Attention = "Chúc mừng bạn! Vui lòng không bán hoặc chia sẻ cho người khác!";
+
 $done({ body: JSON.stringify(obj) });
